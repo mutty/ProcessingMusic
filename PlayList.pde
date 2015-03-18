@@ -10,10 +10,17 @@ class PlayList{
   ArrayList<File> fileList= new ArrayList<File>();
   //File[] file=new File[100];
   int CurNum=-1;  //now playing
-  int ClickItem=-1;
+  
+  int cycleState=0;  //0 seq 1 random 2 allCyc 3 singleCyc
+  int ClickItem=0;
   
   int firShowNum=0;
   
+  color backC=color(0,0,100);
+  color wordC=color(0,0,100);
+  color uiC=color(230,100,100);
+  color showC=color(350,100,100);
+  color curPlayC=color(15,100,100);
   
   PlayList(float tmpposx,float tmpposy,float tmpwidth,float tmpheight,int tmpitemnum)
   {
@@ -23,7 +30,7 @@ class PlayList{
     Height=tmpheight;
     ItemNum=tmpitemnum;
     ItemHeight=Height/(1.0*ItemNum);
-    font = createFont("Microsoft YaHei UI", 15);
+    font = createFont("Microsoft YaHei UI", 13);
   }
   
   PlayList(File[] f)
@@ -45,9 +52,9 @@ class PlayList{
   void draw(){
     for(int i=0;i<ItemNum;i++)
     {
-        fill(255,255);
+      fill(uiC);
       noStroke();
-      rect(posx,posy+i*ItemHeight,Width,ItemHeight-2);
+      rect(posx,posy+i*ItemHeight,Width,ItemHeight-1.5);
     }
    
     
@@ -61,14 +68,14 @@ class PlayList{
     {
       if(i==CurNum)
       {
-        fill(255,255,0);
+        fill(curPlayC);
         noStroke();
         rect(posx,posy+(i-firShowNum)*ItemHeight,Width,ItemHeight-2);
       }
-      fill(255,0,0);
-      float middleY=posy+(i-firShowNum)*ItemHeight+ItemHeight/2.0;
+      fill(wordC);
+      float middleY=posy+(i-firShowNum)*ItemHeight+ItemHeight/2.0+2;
       textAlign(LEFT);
-      textFont(font, 12);
+      textFont(font, 13);
       text(fileList.get(i).getName(),posx+1,middleY);
     }
   }
@@ -86,11 +93,34 @@ class PlayList{
     return -1;
   }
   
+  void getNextPlay(){
+    int s=fileList.size();
+    if(cycleState==0)
+    {
+      if(CurNum<s-1);
+        CurNum++;
+    }
+    else if(cycleState==1)
+    {
+      println("get random next");
+      CurNum=(int)(random(0,s-1));
+    }
+    else if(cycleState==2)
+    {
+      CurNum=(CurNum+1)%s;
+    }
+    else if(cycleState==3)
+      CurNum=CurNum;
+  }
   
   void updateFirShow(int a){
     firShowNum=a;
   }
   
+  
+  
+  void playNow(){
     
+  }
   
 }

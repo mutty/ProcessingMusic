@@ -1,8 +1,13 @@
 import ddf.minim.*;
 class Button {
   // Class variables
-  boolean isNumber;
-  boolean isSpecial;
+  boolean isPrevious=false;
+  boolean isNext=false;
+  boolean isStart=false;
+  boolean isCycle=false;
+  boolean isFolder=false;
+  boolean isShow=false;
+  boolean isVolumn=false;
   float numButtonValue;
   String opButtonValue;
   String spButtonValue;
@@ -13,7 +18,15 @@ class Button {
   int buttonH;
   boolean overBox = false;
   color buttonC;
-   PFont font ;
+  PFont font,font2 ;
+  
+  int cycleState=0; //1 seq 2 random 3 allCyc 4 singleCyc
+   
+  color backC=color(0,0,100);
+  color wordC=color(0,0,100);
+  color uiC=color(230,100,100);
+  color showC=color(350,100,100);
+  color showButtonC=color(210,100,100);
   
   int type;  //1 play  2 stop 3 open
  
@@ -26,121 +39,114 @@ class Button {
     buttonC = tempButtonC;
     //println(numButtonValue);
     type=tmpType;
-    font = createFont("Microsoft YaHei UI", 12);
+    buttonC=color(230,100,100);
+    font = createFont("Microsoft YaHei UI", 15);
+    font2 = createFont("Microsoft YaHei UI", 12);
   }
 
   
-  Button asSpecial(String buttonValue) {
-    isSpecial = true;
-    spButtonValue = buttonValue;
+  Button asStart() {
+    isStart = true;
     return this;
+  }
+  
+  Button asPrevious(){
+    isPrevious=true;
+    return this;
+  }
+  
+  Button asNext(){
+    isNext=true;
+    return this;
+  }
+  
+  Button asCycle(){
+    isCycle=true;
+    return this;
+  }
+  
+  Button asFolder(){
+    isFolder=true;
+    return this;
+  }
+  
+  Button asShow(){
+    isShow=true;
+    return this;
+  }
+  
+  Button asVolumn(){
+    isVolumn=true;
+    return this;
+  }
+  
+  void setPlayer(AudioPlayer play){
+    player = play;
   }
  
   // Draw the button on the canvas
   void display() {
-    // Draw rounded edged button on canvas
-    if(isNumber) {
-      fill(buttonC);
-      stroke(0);
-      strokeWeight(2);
-      rect(xpos, ypos, buttonW, buttonH, 10);
-      fill(122,44,22);
-      textSize(24);
-      text(int(numButtonValue), xpos+15, ypos+30);
-    } else if (isSpecial) {
-      fill(buttonC,30);
-      stroke(0);
+     fill(uiC);
+      smooth();
       noStroke();
-      rect(xpos, ypos, buttonW, buttonH, 10);
-      fill(0);
-      textAlign(LEFT);
-      textFont(font, 12);
-      text(spButtonValue, xpos+15, ypos+20);
-    } else {
-      if (opButtonValue == "+/-") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(18);
-        text(opButtonValue, xpos+8, ypos+30);
-      } else if (opButtonValue == "%") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(24);
-        text(opButtonValue, xpos+12, ypos+30);
-      } else if (opButtonValue == "Sqrt") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(17);
-        text(opButtonValue, xpos+6, ypos+35);
-      } else if (opButtonValue == "Sin") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(19);
-        text(opButtonValue, xpos+8, ypos+30);
-      } else if (opButtonValue == "Cos") {
-        fill(133);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(19);
-        text(opButtonValue, xpos+7, ypos+30);
-      } else if (opButtonValue == "-") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(24);
-        text(opButtonValue, xpos+18, ypos+30);
-      } else if (opButtonValue == "Sq") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(19);
-        text(opButtonValue, xpos+12, ypos+30);
-      } else if (opButtonValue == "C") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(24);
-        text(opButtonValue, xpos+11, ypos+30);
-      } else if (opButtonValue == "Pow") {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(18);
-        text(opButtonValue, xpos+5, ypos+30);
-      }  else {
-        fill(buttonC);
-        stroke(0);
-        strokeWeight(2);
-        rect(xpos, ypos, buttonW, buttonH, 10);
-        fill(0);
-        textSize(24);
-        text(opButtonValue, xpos+15, ypos+30);
-      }
+      rect(xpos, ypos, buttonW, buttonH);
+      fill(wordC);
+     float boudtmp=buttonH/6.5;
+     float boudtmp2=boudtmp*2;
+     noStroke();
+     smooth();
+    if (isStart) {
+      if(player==null)
+       triangle(xpos+boudtmp,ypos+boudtmp,xpos+boudtmp,ypos+buttonH-boudtmp,xpos+buttonW-boudtmp,ypos+buttonH/2.0);
+      else if(player.isPlaying()==false || player==null)
+        triangle(xpos+boudtmp,ypos+boudtmp,xpos+boudtmp,ypos+buttonH-boudtmp,xpos+buttonW-boudtmp,ypos+buttonH/2.0);
+      else
+        rect(xpos+boudtmp2,ypos+boudtmp2,buttonW-boudtmp2*2,buttonH-boudtmp2*2);
     }
+   else if(isPrevious)
+   {
+      rect(xpos+boudtmp,ypos+boudtmp,boudtmp2,buttonH-boudtmp2);
+      triangle(xpos+boudtmp+boudtmp2,ypos+buttonH/2.0,xpos+buttonW-boudtmp,ypos+buttonH-boudtmp,xpos+buttonW-boudtmp,ypos+boudtmp);
+   }
+   else if(isNext)
+   {
+     rect(xpos+buttonW-boudtmp2-boudtmp,ypos+boudtmp,boudtmp2,buttonH-boudtmp2);
+     triangle(xpos+boudtmp,ypos+boudtmp,xpos+boudtmp,ypos+buttonH-boudtmp,xpos+buttonW-boudtmp2-boudtmp,ypos+buttonH/2.0);
+   }
+   else if(isCycle){
+      fill(wordC);
+      textAlign(LEFT);
+      textFont(font2, 12);
+      if(cycleState==0)
+        text("顺序播放", xpos+3, ypos+20);
+      else if(cycleState==1)
+        text("随机播放", xpos+3, ypos+20);
+      else if(cycleState==2)
+        text("全部循环", xpos+3, ypos+20);
+      else if(cycleState==3)
+         text("单曲循环", xpos+3, ypos+20);
+   }
+   else if(isFolder){
+      fill(wordC);
+      textAlign(LEFT);
+      textFont(font, 15);
+      text("打开", xpos+8, ypos+20);
+   }
+   else if(isShow){
+     fill(wordC);
+     textAlign(LEFT);
+     textFont(font,15);
+     text("特效",xpos+5,ypos+20);
+   }
+   else if(isVolumn)
+   {
+     fill(wordC);
+     textAlign(LEFT);
+     textFont(font2,12);
+     text("VOL",xpos+3,ypos+20);
+   }
   }
- 
+  
   // Handle mouse actions
   void clickButton() {
     overBox = mouseX > xpos && mouseX < xpos+buttonW && mouseY > ypos && mouseY < ypos+buttonH;

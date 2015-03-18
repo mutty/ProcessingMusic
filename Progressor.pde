@@ -10,6 +10,12 @@ class Progressor{
   PFont font ;
   AudioPlayer play;
   
+  color backC=color(0,0,100);
+  color wordC=color(0,0,100);
+  color uiC=color(230,100,100);
+  color showC=color(350,100,100);
+  color timeC=color(320,100,100);
+  
   Progressor(float tmpxpos,float tmpypos,float tmpWidth,float tmpHeight,AudioPlayer tmpplay){
     xpos=tmpxpos;
     ypos=tmpypos;
@@ -17,6 +23,7 @@ class Progressor{
     Height=tmpHeight;
     play=tmpplay;
     font = createFont("Microsoft YaHei UI", 15);
+    //font = loadFont("Pro-20.vlw");
   }
 
   void setPlayer(AudioPlayer tmpplay){
@@ -24,32 +31,32 @@ class Progressor{
   }
   
   void draw(){
-    fill(0);
+    fill(uiC);
     noStroke();
     rect(xpos,ypos,Width,Height);
-    fill(255,0,255);
+    fill(timeC);
     noStroke();
-    rect(xpos+Width,ypos,Width-17,Height);
+    rect(xpos+Width,ypos,41,Height);
     if(play!=null)
     {
-      
       strokeWeight(4);
-      int tmp=(int)(play.bufferSize()/(Width-17));
+      int tmp=(int)(play.bufferSize()/Width);
       float tmp2=Height*0.5;
-      int k=0;
+      int k=1;
       float position = map( play.position(), 0, play.length(), 0, Width );
-      fill( 255, 0, 255 );
+      fill( timeC);
       noStroke();
       rect(xpos, ypos, position,Height);
-      for(int i = 0; i < play.bufferSize() - 1; i+=tmp)
+      for(int i = 0; i+tmp < play.bufferSize() - 1; i+=tmp)
       {
-        stroke(255,i/tmp,0);
+        stroke(i/tmp,100,100);
         float a=play.left.get(i);
         if(a>0.5) a=0.5;
         if(a<-0.5) a=-0.5;
         float b=play.left.get(i+1);
         if(b>0.5) b=0.5;
         if(b<-0.5) b=-0.5;
+        
         line(xpos+k, ypos+ Height/2+ a*tmp2,  xpos+k+1, ypos+ Height/2+b*tmp2);
         k++;
       }
@@ -57,10 +64,10 @@ class Progressor{
       int a=play.position()/1000;
       int min=a/60;
       int sec=a%60;
-      String pp=min+":"+sec;
+      String pp=nf(min,2)+":"+nf(sec,2);
       //println(pp);
       
-      fill(255,255,0);
+      fill(wordC);
       textAlign(LEFT);
       textFont(font, 15);
       text(pp,xpos+Width,ypos+Height/2+4);

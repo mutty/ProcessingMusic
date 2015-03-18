@@ -9,7 +9,7 @@ class VScrollbar {
   float ratio;
   int listNum;
   int showNum;
-
+  
   VScrollbar (float xp, float yp, int sw, int sh, int l,int tmplistNum,int tmpshowNum) {
     swidth = sw;
     sheight = sh;
